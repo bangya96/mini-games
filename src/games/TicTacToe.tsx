@@ -7,9 +7,9 @@ import {
   useWindowDimensions,
   Switch,
   Animated,
-  Easing,
   useColorScheme,
 } from 'react-native';
+import { safeVibrate } from '../utils/haptics';
 
 type Cell = 'X' | 'O' | null;
 type Player = 'X' | 'O';
@@ -55,6 +55,7 @@ export default function TicTacToe() {
 
   useEffect(() => {
     if (!result) return;
+    safeVibrate(result === 'draw' ? 40 : 80);
     if (result === 'X') setXWins(s => s + 1);
     else if (result === 'O') setOWins(s => s + 1);
     else setDraws(s => s + 1);
@@ -72,10 +73,12 @@ export default function TicTacToe() {
   }, [board, turn, vsBot, result, difficulty]);
 
   function resetBoard() {
+    safeVibrate(15);
     setBoard(Array(9).fill(null));
     setTurn('X');
   }
   function resetAll() {
+    safeVibrate(25);
     resetBoard();
     setXWins(0); setOWins(0); setDraws(0);
   }
